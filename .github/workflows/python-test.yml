@@ -28,8 +28,8 @@ jobs:
 
     - name: ▶️ Run Python Code (main.py)
       run: |
-        echo "Output of main.py:"
-        python main.py
+        echo "Output of abhi.py:"
+        python abhi.py
 
     - name: 🧪 Run tests (if any)
       run: |
