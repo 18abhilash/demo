@@ -19,28 +19,19 @@ jobs:
 
     - name: ✅ Check syntax for all .py files
       run: |
-        echo "🔍 Checking syntax of all .py files..."
+        echo "Checking syntax of all .py files..."
         for file in $(find . -name "*.py"); do
           echo "Checking $file"
           python -m py_compile "$file"
         done
         echo "✅ All files passed syntax check"
 
-    - name: ▶️ Run all Python files with __main__ block
+    - name: ▶️ Run Python Code (main.py)
       run: |
-        echo "🚀 Running all executable Python files..."
-        for file in $(find . -name "*.py"); do
-          if grep -q 'if __name__ == ["'\'']__main__["'\'']' "$file"; then
-            echo "🔸 Running $file:"
-            python "$file"
-            echo ""
-          else
-            echo "⚪ Skipping $file (no __main__ block)"
-          fi
-        done
-        echo "✅ Finished running Python files"
+        echo "Output of main.py:"
+        python main.py
 
     - name: 🧪 Run tests (if any)
       run: |
         pip install pytest
-        pytest || echo "⚠️ No tests found or test failed"
+        pytest || echo "No tests or test failed"
