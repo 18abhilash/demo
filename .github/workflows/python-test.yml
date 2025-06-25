@@ -19,19 +19,33 @@ jobs:
 
     - name: ✅ Check syntax for all .py files
       run: |
-        echo "Checking syntax of all .py files..."
+        echo "🔍 Checking syntax of all .py files..."
         for file in $(find . -name "*.py"); do
           echo "Checking $file"
           python -m py_compile "$file"
         done
-        echo "✅ All files passed syntax check"
+        echo "✅ Syntax check complete"
 
-    - name: ▶️ Run Python Code (main.py)
+    - name: ▶️ Run modified Python files with __main__ block
       run: |
-        echo "Output of abhi.py:"
-        python abhi.py
+        echo "🔍 Finding changed .py files..."
+        changed_files=$(git diff --name-only origin/main | grep '.py$' || true)
+
+        if [ -z "$changed_files" ]; then
+          echo "⚠️ No Python files changed in this commit."
+        else
+          for file in $changed_files; do
+            if grep -q 'if __name__ == ["'\'']__main__["'\'']' "$file"; then
+              echo "🚀 Running $file:"
+              python "$file"
+              echo ""
+            else
+              echo "⚪ Skipping $file (no __main__ block)"
+            fi
+          done
+        fi
 
     - name: 🧪 Run tests (if any)
       run: |
         pip install pytest
-        pytest || echo "No tests or test failed"
+        pytest || echo "⚠️ No tests or test failed"
